@@ -12,13 +12,6 @@ npm install @phantasy/vn-tts
 bun add @phantasy/vn-tts
 ```
 
-Until the package is published to npm, install from Git:
-
-```bash
-npm install git+https://github.com/phantasy-bot/vn-tts.git
-bun add git+https://github.com/phantasy-bot/vn-tts.git
-```
-
 ## Usage
 
 ### Node / Bun
