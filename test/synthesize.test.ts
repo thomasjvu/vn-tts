@@ -43,4 +43,19 @@ describe("synthesize", () => {
     expect(result.sampleRate).toBe(16000);
     expect(result.durationMs).toBeGreaterThan(0);
   });
+
+  it("speeds up output when speed is above 1", () => {
+    const normal = synthesize({ text: "hello world" });
+    const fast = synthesize({ text: "hello world", speed: 2 });
+
+    expect(fast.durationMs).toBeLessThan(normal.durationMs);
+  });
+
+  it("supports pitch multiplier without changing timing", () => {
+    const normal = synthesize({ text: "hello" });
+    const higher = synthesize({ text: "hello", pitch: 1.5 });
+
+    expect(higher.durationMs).toBe(normal.durationMs);
+    expect(higher.audio.length).toBe(normal.audio.length);
+  });
 });

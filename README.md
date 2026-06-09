@@ -42,6 +42,8 @@ const blob = synthesizeToBlob({ text: "Hello world" });
 ```ts
 synthesize({
   text: "Hello",
+  pitch: 1.2,           // multiplier on base pitch, default 1
+  speed: 1.5,           // speech speed multiplier, default 1
   baseFrequency: 250,   // Hz, default 250
   sampleRate: 8000,     // default 8000
   vowelVolume: 0.4,     // default 0.4

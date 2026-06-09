@@ -34,9 +34,20 @@ function addWavHeader(samples, sampleRate) {
 
 // src/synthesize.ts
 var DEFAULT_BASE_FREQUENCY = 250;
+var DEFAULT_PITCH = 1;
+var DEFAULT_SPEED = 1;
 var DEFAULT_SAMPLE_RATE = 8e3;
 var DEFAULT_VOWEL_VOLUME = 0.4;
 var DEFAULT_CONSONANT_VOLUME = 0.3;
+function clampMultiplier(value, fallback) {
+  if (!Number.isFinite(value) || value <= 0) {
+    return fallback;
+  }
+  return Math.min(4, Math.max(0.25, value));
+}
+function scaleDurationMs(durationMs, speed) {
+  return Math.max(5, durationMs / speed);
+}
 function generateBeep(frequency, durationMs, sampleRate, volume = 0.5) {
   const numSamples = Math.floor(durationMs / 1e3 * sampleRate);
   const samples = new Float32Array(numSamples);
@@ -68,7 +79,8 @@ function getFrequencyForChar(char, baseFreq) {
   return baseFreq;
 }
 function synthesizePcm(options) {
-  const { text, baseFrequency, sampleRate, vowelVolume, consonantVolume } = options;
+  const { text, baseFrequency, pitch, speed, sampleRate, vowelVolume, consonantVolume } = options;
+  const effectiveBaseFrequency = baseFrequency * pitch;
   const allSamples = [];
   const cleanedText = text.replace(/[^a-zA-Z ]/g, " ").trim();
   if (cleanedText.length === 0) {
@@ -81,15 +93,18 @@ function synthesizePcm(options) {
   }
   for (const char of cleanedText) {
     if (char === " ") {
-      allSamples.push(new Float32Array(Math.floor(sampleRate * 0.05)));
+      const gapMs = scaleDurationMs(50, speed);
+      allSamples.push(new Float32Array(Math.floor(gapMs / 1e3 * sampleRate)));
       continue;
     }
-    const freq = getFrequencyForChar(char, baseFrequency);
+    const freq = getFrequencyForChar(char, effectiveBaseFrequency);
     const isV = isVowel(char);
-    const duration = isV ? 80 + char.charCodeAt(0) % 40 : 30 + char.charCodeAt(0) % 20;
+    const baseDuration = isV ? 80 + char.charCodeAt(0) % 40 : 30 + char.charCodeAt(0) % 20;
+    const duration = scaleDurationMs(baseDuration, speed);
     const volume = isV ? vowelVolume : consonantVolume;
     allSamples.push(generateBeep(freq, duration, sampleRate, volume));
-    allSamples.push(new Float32Array(Math.floor(sampleRate * 0.02)));
+    const charGapMs = scaleDurationMs(20, speed);
+    allSamples.push(new Float32Array(Math.floor(charGapMs / 1e3 * sampleRate)));
   }
   const totalLength = allSamples.reduce((sum, arr) => sum + arr.length, 0);
   const combined = new Float32Array(totalLength);
@@ -108,6 +123,8 @@ function synthesize(options) {
   const { pcm, durationMs } = synthesizePcm({
     text: options.text,
     baseFrequency: options.baseFrequency ?? DEFAULT_BASE_FREQUENCY,
+    pitch: clampMultiplier(options.pitch ?? DEFAULT_PITCH, DEFAULT_PITCH),
+    speed: clampMultiplier(options.speed ?? DEFAULT_SPEED, DEFAULT_SPEED),
     sampleRate,
     vowelVolume: options.vowelVolume ?? DEFAULT_VOWEL_VOLUME,
     consonantVolume: options.consonantVolume ?? DEFAULT_CONSONANT_VOLUME

@@ -10,7 +10,8 @@ type SnippetTab = "install" | "node" | "browser" | "phantasy";
 
 interface DemoState {
   text: string;
-  baseFrequency: number;
+  pitch: number;
+  speed: number;
   vowelVolume: number;
   consonantVolume: number;
   activeTab: SnippetTab;
@@ -19,7 +20,8 @@ interface DemoState {
 
 const state: DemoState = {
   text: "Hello! This is visual novel style speech.",
-  baseFrequency: 250,
+  pitch: 1,
+  speed: 1,
   vowelVolume: 0.4,
   consonantVolume: 0.3,
   activeTab: "install",
@@ -32,7 +34,8 @@ let currentAudio: HTMLAudioElement | null = null;
 function getOptions(): VnTtsOptions {
   return {
     text: state.text,
-    baseFrequency: state.baseFrequency,
+    pitch: state.pitch,
+    speed: state.speed,
     vowelVolume: state.vowelVolume,
     consonantVolume: state.consonantVolume,
   };
@@ -40,6 +43,10 @@ function getOptions(): VnTtsOptions {
 
 function escapeForJson(value: string): string {
   return JSON.stringify(value);
+}
+
+function formatMultiplier(value: number): string {
+  return `${value.toFixed(2)}x`;
 }
 
 function buildSnippet(tab: SnippetTab): string {
@@ -58,7 +65,8 @@ import { synthesize } from "@phantasy/vn-tts";
 
 const { audio, durationMs } = synthesize({
   text: ${escapeForJson(options.text)},
-  baseFrequency: ${options.baseFrequency},
+  pitch: ${options.pitch},
+  speed: ${options.speed},
   vowelVolume: ${options.vowelVolume},
   consonantVolume: ${options.consonantVolume},
 });
@@ -70,7 +78,8 @@ console.log(\`Wrote output.wav (\${durationMs}ms)\`);`;
 
 const url = createObjectUrl({
   text: ${escapeForJson(options.text)},
-  baseFrequency: ${options.baseFrequency},
+  pitch: ${options.pitch},
+  speed: ${options.speed},
   vowelVolume: ${options.vowelVolume},
   consonantVolume: ${options.consonantVolume},
 });
@@ -133,7 +142,7 @@ function render(): void {
 
   root.innerHTML = `
     <h1>vn-tts playground</h1>
-    <p class="lead">Visual novel style local TTS — tune settings, preview audio, copy install snippets.</p>
+    <p class="lead">Visual novel style local TTS — tune pitch, speed, preview audio, copy install snippets.</p>
 
     <section>
       <h2>Text</h2>
@@ -145,10 +154,17 @@ function render(): void {
     <section>
       <h2>Configuration</h2>
       <label>
-        Base frequency (Hz)
+        Pitch
         <div class="rangeRow">
-          <input id="base-frequency" type="range" min="180" max="360" step="5" value="${state.baseFrequency}" />
-          <span class="rangeValue">${state.baseFrequency}</span>
+          <input id="pitch" type="range" min="0.5" max="2" step="0.05" value="${state.pitch}" />
+          <span class="rangeValue">${formatMultiplier(state.pitch)}</span>
+        </div>
+      </label>
+      <label>
+        Speed
+        <div class="rangeRow">
+          <input id="speed" type="range" min="0.5" max="2" step="0.05" value="${state.speed}" />
+          <span class="rangeValue">${formatMultiplier(state.speed)}</span>
         </div>
       </label>
       <label>
@@ -191,8 +207,13 @@ function render(): void {
     render();
   });
 
-  document.querySelector<HTMLInputElement>("#base-frequency")?.addEventListener("input", (event) => {
-    state.baseFrequency = Number((event.target as HTMLInputElement).value);
+  document.querySelector<HTMLInputElement>("#pitch")?.addEventListener("input", (event) => {
+    state.pitch = Number((event.target as HTMLInputElement).value);
+    render();
+  });
+
+  document.querySelector<HTMLInputElement>("#speed")?.addEventListener("input", (event) => {
+    state.speed = Number((event.target as HTMLInputElement).value);
     render();
   });
 

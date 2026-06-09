@@ -2,9 +2,22 @@ import type { VnTtsOptions, VnTtsResult } from "./types";
 import { addWavHeader, floatToUint8 } from "./wav";
 
 const DEFAULT_BASE_FREQUENCY = 250;
+const DEFAULT_PITCH = 1;
+const DEFAULT_SPEED = 1;
 const DEFAULT_SAMPLE_RATE = 8000;
 const DEFAULT_VOWEL_VOLUME = 0.4;
 const DEFAULT_CONSONANT_VOLUME = 0.3;
+
+function clampMultiplier(value: number, fallback: number): number {
+  if (!Number.isFinite(value) || value <= 0) {
+    return fallback;
+  }
+  return Math.min(4, Math.max(0.25, value));
+}
+
+function scaleDurationMs(durationMs: number, speed: number): number {
+  return Math.max(5, durationMs / speed);
+}
 
 function generateBeep(
   frequency: number,
@@ -51,9 +64,20 @@ function getFrequencyForChar(char: string, baseFreq: number): number {
 }
 
 function synthesizePcm(options: Required<
-  Pick<VnTtsOptions, "text" | "baseFrequency" | "sampleRate" | "vowelVolume" | "consonantVolume">
+  Pick<
+    VnTtsOptions,
+    | "text"
+    | "baseFrequency"
+    | "pitch"
+    | "speed"
+    | "sampleRate"
+    | "vowelVolume"
+    | "consonantVolume"
+  >
 >): { pcm: Uint8Array; sampleRate: number; durationMs: number } {
-  const { text, baseFrequency, sampleRate, vowelVolume, consonantVolume } = options;
+  const { text, baseFrequency, pitch, speed, sampleRate, vowelVolume, consonantVolume } =
+    options;
+  const effectiveBaseFrequency = baseFrequency * pitch;
   const allSamples: Float32Array[] = [];
   const cleanedText = text.replace(/[^a-zA-Z ]/g, " ").trim();
 
@@ -68,19 +92,22 @@ function synthesizePcm(options: Required<
 
   for (const char of cleanedText) {
     if (char === " ") {
-      allSamples.push(new Float32Array(Math.floor(sampleRate * 0.05)));
+      const gapMs = scaleDurationMs(50, speed);
+      allSamples.push(new Float32Array(Math.floor((gapMs / 1000) * sampleRate)));
       continue;
     }
 
-    const freq = getFrequencyForChar(char, baseFrequency);
+    const freq = getFrequencyForChar(char, effectiveBaseFrequency);
     const isV = isVowel(char);
-    const duration = isV
+    const baseDuration = isV
       ? 80 + (char.charCodeAt(0) % 40)
       : 30 + (char.charCodeAt(0) % 20);
+    const duration = scaleDurationMs(baseDuration, speed);
     const volume = isV ? vowelVolume : consonantVolume;
 
     allSamples.push(generateBeep(freq, duration, sampleRate, volume));
-    allSamples.push(new Float32Array(Math.floor(sampleRate * 0.02)));
+    const charGapMs = scaleDurationMs(20, speed);
+    allSamples.push(new Float32Array(Math.floor((charGapMs / 1000) * sampleRate)));
   }
 
   const totalLength = allSamples.reduce((sum, arr) => sum + arr.length, 0);
@@ -103,6 +130,8 @@ export function synthesize(options: VnTtsOptions): VnTtsResult {
   const { pcm, durationMs } = synthesizePcm({
     text: options.text,
     baseFrequency: options.baseFrequency ?? DEFAULT_BASE_FREQUENCY,
+    pitch: clampMultiplier(options.pitch ?? DEFAULT_PITCH, DEFAULT_PITCH),
+    speed: clampMultiplier(options.speed ?? DEFAULT_SPEED, DEFAULT_SPEED),
     sampleRate,
     vowelVolume: options.vowelVolume ?? DEFAULT_VOWEL_VOLUME,
     consonantVolume: options.consonantVolume ?? DEFAULT_CONSONANT_VOLUME,
