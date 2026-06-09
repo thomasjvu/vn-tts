@@ -1,0 +1,51 @@
+{
+  "name": "@phantasy/vn-tts",
+  "version": "0.1.0",
+  "description": "Visual novel style text-to-speech synthesis — local sine-wave beeps, zero dependencies",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "demo": "npm run build && npm run dev --prefix demo",
+    "demo:build": "npm run build && npm run build --prefix demo"
+  },
+  "keywords": [
+    "tts",
+    "text-to-speech",
+    "visual-novel",
+    "vn-tts",
+    "synthesis",
+    "wav"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phantasy-bot/vn-tts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/phantasy-bot/vn-tts/issues"
+  },
+  "homepage": "https://github.com/phantasy-bot/vn-tts#readme",
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}
