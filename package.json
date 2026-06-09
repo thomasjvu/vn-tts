@@ -25,7 +25,7 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "demo": "npm run build && npm run dev --prefix demo",
-    "demo:build": "npm run build && npm run build --prefix demo"
+    "demo:build": "npm run build && npm ci --prefix demo && npm run build --prefix demo"
   },
   "keywords": [
     "tts",
@@ -43,7 +43,7 @@
   "bugs": {
     "url": "https://github.com/phantasy-bot/vn-tts/issues"
   },
-  "homepage": "https://github.com/phantasy-bot/vn-tts#readme",
+  "homepage": "https://phantasy-bot.github.io/vn-tts/",
   "devDependencies": {
     "tsup": "^8.5.0",
     "typescript": "^5.9.2",

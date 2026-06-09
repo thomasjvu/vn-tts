@@ -78,7 +78,7 @@ npm install
 npm run demo
 ```
 
-Or visit the [live demo](https://phantasy-bot.github.io/vn-tts/) after GitHub Pages deploy.
+Live demo: [phantasy-bot.github.io/vn-tts](https://phantasy-bot.github.io/vn-tts/)
 
 ## License
 
