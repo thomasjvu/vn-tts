@@ -8,7 +8,7 @@ export default defineConfig({
   base: process.env.GITHUB_ACTIONS ? "/vn-tts/" : "/",
   resolve: {
     alias: {
-      "@phantasy/vn-tts": path.resolve(demoDir, "../dist/index.js"),
+      "@thomasjvu/vn-tts": path.resolve(demoDir, "../dist/index.js"),
     },
   },
   build: {

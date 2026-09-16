@@ -1,6 +1,6 @@
 {
-  "name": "@phantasy/vn-tts",
-  "version": "0.1.2",
+  "name": "@thomasjvu/vn-tts",
+  "version": "0.2.0",
   "description": "Visual novel style text-to-speech synthesis \u2014 local sine-wave beeps, zero dependencies",
   "type": "module",
   "main": "./dist/index.cjs",

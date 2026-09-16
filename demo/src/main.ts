@@ -3,7 +3,7 @@ import {
   synthesize,
   synthesizeToBlob,
   type VnTtsOptions,
-} from "@phantasy/vn-tts";
+} from "@thomasjvu/vn-tts";
 import "./style.css";
 
 type SnippetTab = "install" | "browser" | "node";
@@ -65,12 +65,12 @@ function buildSnippet(tab: SnippetTab): string {
   switch (tab) {
     case "install":
       return [
-        "npm install @phantasy/vn-tts",
-        "bun add @phantasy/vn-tts",
-        "pnpm add @phantasy/vn-tts",
+        "npm install @thomasjvu/vn-tts",
+        "bun add @thomasjvu/vn-tts",
+        "pnpm add @thomasjvu/vn-tts",
       ].join("\n");
     case "browser":
-      return `import { createObjectUrl } from "@phantasy/vn-tts";
+      return `import { createObjectUrl } from "@thomasjvu/vn-tts";
 
 const url = createObjectUrl({
   text: ${escapeForJson(options.text)},
@@ -81,7 +81,7 @@ const url = createObjectUrl({
 await new Audio(url).play();`;
     case "node":
       return `import { writeFileSync } from "node:fs";
-import { synthesize } from "@phantasy/vn-tts";
+import { synthesize } from "@thomasjvu/vn-tts";
 
 const { audio, durationMs } = synthesize({
   text: ${escapeForJson(options.text)},
@@ -196,7 +196,7 @@ function render(): void {
         <h1>vn-tts</h1>
         <p>Visual novel TTS · local sine-wave beeps · zero dependencies</p>
       </div>
-      <span class="pill">@phantasy/vn-tts</span>
+      <span class="pill">@thomasjvu/vn-tts</span>
     </header>
 
     <section class="stage" aria-label="Visual novel preview">

@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@phantasy/vn-tts": "file:.."
+    "@thomasjvu/vn-tts": "file:.."
   },
   "devDependencies": {
     "typescript": "^5.9.2",

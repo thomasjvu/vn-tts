@@ -1,4 +1,4 @@
-# @phantasy/vn-tts
+# @thomasjvu/vn-tts
 
 Visual novel style text-to-speech — local sine-wave beeps, zero dependencies.
 
@@ -7,9 +7,9 @@ Each character becomes a short pitched tone (vowels longer and softer, consonant
 ## Install
 
 ```bash
-npm install @phantasy/vn-tts
+npm install @thomasjvu/vn-tts
 # or
-bun add @phantasy/vn-tts
+bun add @thomasjvu/vn-tts
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ bun add @phantasy/vn-tts
 
 ```ts
 import { writeFileSync } from "node:fs";
-import { synthesize } from "@phantasy/vn-tts";
+import { synthesize } from "@thomasjvu/vn-tts";
 
 const { audio } = synthesize({ text: "Hello world" });
 writeFileSync("output.wav", audio);
@@ -27,7 +27,7 @@ writeFileSync("output.wav", audio);
 ### Browser
 
 ```ts
-import { createObjectUrl, synthesizeToBlob } from "@phantasy/vn-tts";
+import { createObjectUrl, synthesizeToBlob } from "@thomasjvu/vn-tts";
 
 const url = createObjectUrl({ text: "Hello world" });
 const audio = new Audio(url);
