@@ -53,7 +53,7 @@ synthesize({
 
 ## Phantasy
 
-vn-tts is an optional TTS provider in [Phantasy](https://github.com/phantasy-bot/companion):
+vn-tts is an optional TTS provider in [Phantasy](https://phantasy.bot):
 
 ```bash
 phantasy extensions install provider vn-tts
@@ -80,7 +80,7 @@ npm install
 npm run demo
 ```
 
-Live demo: [phantasy-bot.github.io/vn-tts](https://phantasy-bot.github.io/vn-tts/)
+Live demo: [thomasjvu.github.io/vn-tts](https://thomasjvu.github.io/vn-tts/)
 
 ## License
 

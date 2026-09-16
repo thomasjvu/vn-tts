@@ -1,7 +1,7 @@
 {
   "name": "@phantasy/vn-tts",
   "version": "0.1.1",
-  "description": "Visual novel style text-to-speech synthesis — local sine-wave beeps, zero dependencies",
+  "description": "Visual novel style text-to-speech synthesis \u2014 local sine-wave beeps, zero dependencies",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -38,12 +38,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/phantasy-bot/vn-tts.git"
+    "url": "git+https://github.com/thomasjvu/vn-tts.git"
   },
   "bugs": {
-    "url": "https://github.com/phantasy-bot/vn-tts/issues"
+    "url": "https://github.com/thomasjvu/vn-tts/issues"
   },
-  "homepage": "https://phantasy-bot.github.io/vn-tts/",
+  "homepage": "https://thomasjvu.github.io/vn-tts/",
   "devDependencies": {
     "tsup": "^8.5.0",
     "typescript": "^5.9.2",
